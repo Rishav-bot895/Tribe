@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users','home',
 ]
 
 MIDDLEWARE = [
@@ -73,26 +74,16 @@ WSGI_APPLICATION = 'tribe.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
-
-        #'ENGINE': 'django.db.backends.sqlite3',
-
         'ENGINE': 'django.db.backends.postgresql',
-
-        'NAME': '',
-
-        'USER': '',
-
-        'PASSWORD': '',
-
-        'HOST': '',
-
-        'PORT': '',
-
+        'NAME': 'tribe_db',
+        'USER': 'rishav',
+        'PASSWORD': 'rishav',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-
 }
+
 
 
 # Password validation
@@ -138,3 +129,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = "/users/login/"
+LOGIN_REDIRECT_URL = "/home/"
+LOGOUT_REDIRECT_URL = "/users/login"
+
