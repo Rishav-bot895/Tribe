@@ -11,7 +11,7 @@
           <a class="nav-link" href="#">Chat</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Account</a>
+          <a class="nav-link" href="{% url 'account_details' %}">Account</a>
         </li>
          {% if user.is_authenticated %}
         <form method="post" action="{% url 'logout' %}">
