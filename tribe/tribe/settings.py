@@ -31,13 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users','home','feed','account',
+    'users','home','feed','account','chat',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +68,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'tribe.wsgi.application'
+#WSGI_APPLICATION = 'tribe.wsgi.application'
+ASGI_APPLICATION = 'tribe.asgi.application'
 
 
 # Database
@@ -134,3 +136,8 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "homepage"
 LOGOUT_REDIRECT_URL = "login"
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}

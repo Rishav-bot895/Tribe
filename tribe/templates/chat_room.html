@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ group.groupchat_name }}</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="container mt-4">
+<div class="d-flex justify-content-between mb-3">
+  <div>
+    <a href="{% url 'add_users' group.group_name %}" class="btn btn-sm btn-outline-primary">
+      Add Users
+    </a>
+  </div>
+
+  <form method="post" action="{% url 'leave_chat' group.group_name %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm btn-outline-danger">
+      Leave Chat
+    </button>
+  </form>
+</div>
+
+    <!-- Chat Title -->
+    <h3 class="mb-3">
+      {{ group.groupchat_name }}
+    </h3>
+
+    <!-- Chat Box -->
+    <div
+      id="chat-box"
+      class="border rounded p-3 mb-3"
+      style="height: 400px; overflow-y: auto; background-color: #f8f9fa;"
+    >
+      {% for msg in messages %}
+        <div class="mb-2">
+          <strong>{{ msg.author.username }}:</strong>
+          {{ msg.body }}
+        </div>
+      {% empty %}
+        <p class="text-muted">No messages yet.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Message Input -->
+    <div class="input-group">
+      <input
+        type="text"
+        id="message-input"
+        class="form-control"
+        placeholder="Type a message">
+
+      <button
+        class="btn btn-primary"
+        id="send-btn">
+        Send
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+  </script>
+
+  <!-- CHAT JAVASCRIPT -->
+  <script>
+    const groupName = "{{ group.group_name }}";
+
+    const socket = new WebSocket(
+      'ws://' + window.location.host + '/ws/chat/' + groupName + '/'
+    );
+
+    const chatBox = document.getElementById('chat-box');
+    const input = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    socket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+
+      const div = document.createElement('div');
+      div.classList.add('mb-2');
+      div.innerHTML =
+        '<strong>' + data.username + ':</strong> ' + data.message;
+
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    sendBtn.onclick = function() {
+      const message = input.value.trim();
+      if (!message) return;
+
+      socket.send(JSON.stringify({
+        message: message
+      }));
+
+      input.value = '';
+    };
+
+    input.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendBtn.click();
+      }
+    });
+  </script>
+
+</body>
+</html>
