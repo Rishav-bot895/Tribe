@@ -137,18 +137,18 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "homepage"
 LOGOUT_REDIRECT_URL = "login"
 
-'''CHANNEL_LAYERS = {
+CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     }
-}'''
+}
 
-CHANNEL_LAYERS = {
+'''CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('redis://default:VrvlzxKOXkitVVFZznIGAWMmoJPwBaRo@gondola.proxy.rlwy.net:59205')],
+            "hosts": [('Redis_url')],
         },
     },
-}
+}'''
 
