@@ -4,52 +4,201 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Your Chats</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+    }
 
-  <!-- Bootstrap CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    rel="stylesheet">
+    body {
+      background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .page-header h3 {
+      margin: 0;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary-color) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    .create-chat-btn {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .create-chat-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      color: white;
+    }
+
+    .chat-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .chat-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .chat-item:hover {
+      border-color: var(--primary-color);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+      transform: translateX(8px);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .chat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .chat-info {
+      flex: 1;
+    }
+
+    .chat-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .chat-arrow {
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .chat-item:hover .chat-arrow {
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--bg-card);
+      border: 2px dashed var(--border-color);
+      border-radius: 1rem;
+      margin-top: 2rem;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      color: var(--text-secondary);
+      opacity: 0.5;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h5 {
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      color: var(--text-secondary);
+      margin-bottom: 0;
+    }
+  </style>
 </head>
 
 <body>
-
   {% include 'navbar.html' %}
 
-  <div class="container mt-4">
-
-    <!-- Header + Create Button -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h3 class="mb-0">Your Chats</h3>
-
-      <a href="{% url 'create_chat' %}" class="btn btn-primary">
-        + Create Chat
+  <div class="container mt-4" style="max-width: 800px;">
+    <div class="page-header">
+      <h3><i class="bi bi-chat-dots me-2"></i> Your Chats</h3>
+      <a href="{% url 'create_chat' %}" class="create-chat-btn">
+        <i class="bi bi-plus-circle"></i> Create Chat
       </a>
     </div>
 
     {% if chats %}
-      <div class="list-group">
+      <div class="chat-list">
         {% for chat in chats %}
-          <a
-            href="{% url 'chat_room' chat.group_name %}"
-            class="list-group-item list-group-item-action">
-            <strong>
-              {{ chat.groupchat_name|default:chat.group_name }}
-            </strong>
+          <a href="{% url 'chat_room' chat.group_name %}" class="chat-item">
+            <div class="chat-icon">
+              <i class="bi bi-chat-fill"></i>
+            </div>
+            <div class="chat-info">
+              <h5 class="chat-name">
+                {{ chat.groupchat_name|default:chat.group_name }}
+              </h5>
+            </div>
+            <i class="bi bi-chevron-right chat-arrow"></i>
           </a>
         {% endfor %}
       </div>
     {% else %}
-      <p class="text-muted">
-        You are not part of any chats yet.
-      </p>
+      <div class="empty-state">
+        <i class="bi bi-chat-dots"></i>
+        <h5>No chats yet</h5>
+        <p>Create a chat to start messaging with friends</p>
+      </div>
     {% endif %}
-
   </div>
 
-  <!-- Bootstrap JS -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
-  </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
